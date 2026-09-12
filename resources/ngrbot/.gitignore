@@ -1,0 +1,26 @@
+# Segredos - nunca subir
+.env
+.env.local
+.env.production
+
+# Dependencias
+node_modules/
+dist/
+build/
+
+# Sessoes WhatsApp
+.wwebjs_auth/
+.wwebjs_cache/
+sessions/
+
+# Banco de dados local
+*.sqlite
+*.sqlite3
+database/database.sqlite
+database/sessions.sqlite
+
+# Logs & sistema
+*.log
+.DS_Store
+Thumbs.db
+nul

@@ -1,0 +1,51 @@
+{
+  "name": "ngr-hub",
+  "version": "1.0.0",
+  "description": "NGR HUB - Sistema de Gestao Desktop com IA Embarcada",
+  "main": "main.js",
+  "scripts": {
+    "start": "CMAKE_ARGS=\"-DLLAMA_AVX=OFF -DLLAMA_AVX2=OFF -DLLAMA_FMA=OFF -DGGML_NATIVE=OFF\" GGML_NATIVE=0 GSETTINGS_BACKEND=memory LIBVA_DRIVER_NAME=i965 electron .",
+    "dev": "CMAKE_ARGS=\"-DLLAMA_AVX=OFF -DLLAMA_AVX2=OFF -DLLAMA_FMA=OFF -DGGML_NATIVE=OFF\" GGML_NATIVE=0 GSETTINGS_BACKEND=memory LIBVA_DRIVER_NAME=i965 electron . --dev",
+    "build": "export CMAKE_ARGS=\"-DLLAMA_AVX=OFF -DLLAMA_AVX2=OFF -DLLAMA_FMA=OFF -DGGML_NATIVE=OFF\" GGML_NATIVE=0; electron-builder",
+    "installer": "node instalador-windows.js",
+    "installer:build": "node scripts/build-installer.js",
+    "installer:build-win": "node scripts/build-installer.js --win",
+    "installer:check": "node instalador-windows.js --check",
+    "dist:zip": "node scripts/zip-dist.js",
+    "dist:zip:linux": "node scripts/zip-dist.js --linux",
+    "postinstall": "node -e \"console.log('NGR HUB instalado')\""
+  },
+  "dependencies": {
+    "node-llama-cpp": "^3.5.0",
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
+    "@yao-pkg/pkg": "^6.22.0"
+  },
+  "build": {
+    "appId": "com.ngr.hub",
+    "productName": "NGR HUB",
+    "directories": { "output": "dist" },
+    "asar": true,
+    "compression": "maximum",
+    "removePackageScripts": true,
+    "npmRebuild": true,
+    "nodeGypRebuild": false,
+    "files": [
+      "main.js", "preload.js", "llm-worker.js", "database/**/*", "services/**/*", "scripts/**/*", "frontend/**/*", "models/**/*",
+      "!node_modules/**/*.map",
+      "!**/*.map",
+      "!**/test/**", "!**/tests/**", "!**/__tests__/**",
+      "!**/docs/**", "!**/LICENSE*", "!**/*.md"
+    ],
+    "extraResources": [{ "from": "models/", "to": "models/", "filter": ["**/*.gguf"] }],
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "linux": { "target": [ "AppImage", "deb" ], "icon": "frontend/assets/icon.png", "category": "Office" },
+    "win": { "target": "nsis", "icon": "frontend/assets/icon.ico" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "deleteAppDataOnUninstall": false, "differentialPackage": true },
+    "mac": { "target": "dmg", "icon": "frontend/assets/icon.icns", "category": "public.app-category.business" },
+    "dmg": { "writeUpdateInfo": false }
+  }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-eval'; media-src 'self' blob:; img-src 'self' data:; frame-src 'self' data:; object-src 'self' data:;">
+    <title>NGR HUB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-gem ng-rubi"></i> NGR HUB</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
+                <button class="nav-item" data-page="contas"><i class="fas fa-file-invoice-dollar"></i><span>Contas</span></button>
+                <button class="nav-item" data-page="vendas"><i class="fas fa-shopping-cart"></i><span>Vendas</span></button>
+                <button class="nav-item" data-page="estoque"><i class="fas fa-boxes"></i><span>Estoque</span></button>
+                <button class="nav-item" data-page="clientes"><i class="fas fa-users"></i><span>Clientes</span></button>
+                <button class="nav-item" data-page="tarefas"><i class="fas fa-check-circle"></i><span>Tarefas</span></button>
+                <button class="nav-item" data-page="calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
+                <button class="nav-item" data-page="fichas"><i class="fas fa-clipboard-list"></i><span>Fichas Tecnicas</span></button>
+                <button class="nav-item" data-page="documentos"><i class="fas fa-paperclip"></i><span>Documentos</span></button>
+                <button class="nav-item" data-page="relatorios"><i class="fas fa-chart-line"></i><span>Relatorios</span></button>
+                <button class="nav-item" data-page="whatsapp"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></button>
+                <button class="nav-item" data-page="planos"><i class="fas fa-gem"></i><span>Planos</span></button>
+                <div class="nav-divider"></div>
+                <button class="nav-item" data-page="perfil"><i class="fas fa-user-circle"></i><span>Minha Conta</span></button>
+            </nav>
+            <div class="sidebar-footer">
+                <span>NGR HUB - Desenvolvido por Alison B Oliver/ NG Ruby</span>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="sidebar-toggle" class="topbar-btn"><i class="fas fa-bars"></i></button>
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-right">
+                    <button id="dashboard-config-btn" class="topbar-btn" title="Personalizar Dashboard"><i class="fas fa-cog"></i></button>
+                    <button id="theme-toggle" class="topbar-btn" title="Tema"><i class="fas fa-moon"></i></button>
+                </div>
+                <div id="dashboard-config-panel" class="config-panel hidden">
+                    <div class="config-panel-header">Personalizar Dashboard</div>
+                    <div class="config-panel-subheader">Blocos do Dashboard</div>
+                    <div id="config-blocos-reorder"></div>
+                    <div class="config-divider"></div>
+                    <div class="config-panel-subheader">Estilo dos Graficos</div>
+                    <div id="config-donut-estilo" class="donut-estilo-container"></div>
+                    <div class="config-divider"></div>
+                    <div class="config-panel-subheader">Itens na sidebar</div>
+                    <div id="config-sidebar-lista"></div>
+                </div>
+            </header>
+
+            <div id="page-content">
+                <div class="loading-screen">
+                    <i class="fas fa-robot fa-3x"></i>
+                    <p>Inicializando NGR HUB...</p>
+                </div>
+            </div>
+            <div id="llm-panel" class="llm-panel hidden">
+                <div class="llm-header">
+                    <span>Colio IA</span>
+                    <button id="llm-close" class="topbar-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="llm-messages" id="llm-messages">
+                    <div class="llm-msg assistant">
+                        <div class="llm-avatar"><i class="fas fa-robot"></i></div>
+                        <div class="llm-bubble">Oi! Sou o Colio, seu assistente. Posso criar contas, tarefas, fichas, te ajudar com ideias, projetos e muito mais 🤗📚</div>
+                    </div>
+                </div>
+                <div class="llm-input-area">
+                    <button id="llm-voice-btn" class="topbar-btn" title="Voz"><i class="fas fa-microphone"></i></button>
+                    <input type="text" id="llm-input" placeholder="O que deseja fazer?" />
+                    <button id="llm-send-btn" class="topbar-btn" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button id="llm-fab" class="llm-fab" title="Agente Colio"><i class="fas fa-robot"></i></button>
+    <div id="toast-container"></div>
+
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>

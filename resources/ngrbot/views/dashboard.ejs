@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conexão WhatsApp - NGR HUB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ecr: { bg: '#0a0a0f', bg2: '#12121a', bg3: '#1a1a2e', surface: '#1e1e32', border: '#2a2a3e', text: '#e0e0f0', text2: '#8888aa', gold: '#D4A017', goldh: '#E1B830' }
+          },
+          fontFamily: { sans: ['Segoe UI', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #e0e0f0; min-height: 100vh; }
+    .card-g { background: linear-gradient(160deg, #1e1e32, #12121a); border: 1px solid #2a2a3e; border-radius: 12px; }
+    .text-gold { color: #D4A017; }
+    .bg-gold { background: linear-gradient(135deg, #E1B830, #D4A017); }
+    .bg-gold:hover { filter: brightness(1.08); }
+    .btn-cta { color: #000; font-weight: 700; transition: all .2s; border-radius: 8px; }
+    .btn-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,160,23,.3); }
+    .btn-ghost { background: #1a1a2e; color: #8888aa; border: 1px solid #2a2a3e; transition: all .2s; border-radius: 8px; }
+    .btn-ghost:hover { background: #22223a; color: #e0e0f0; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="p-5 md:p-8">
+    <div class="mb-6 text-center">
+      <h1 class="text-xl md:text-2xl font-bold text-gold flex items-center justify-center gap-2"><i class="fab fa-whatsapp"></i> Conexão WhatsApp</h1>
+      <p class="text-sm text-gray-400 mt-1">Conecte seu WhatsApp para o bot atender automaticamente.</p>
+      <p class="text-xs text-gray-500">As configs de IA, respostas e fluxos sao gerenciadas no <span class="text-gold font-medium">NGR HUB → Minha Conta</span>.</p>
+    </div>
+
+    <div id="pageLoading" class="flex items-center justify-center h-64">
+      <div class="text-center">
+        <div class="w-8 h-8 border-4 border-yellow-500/30 border-t-yellow-500 rounded-full animate-spin mx-auto mb-3"></div>
+        <p class="text-gray-400 text-sm">Carregando...</p>
+      </div>
+    </div>
+
+    <div id="pageConnection" class="hidden w-full max-w-md mx-auto"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const SERVER_USER = <%- JSON.stringify(user) %>;
+    let socket, userId = SERVER_USER.id;
+
+    async function init() {
+      try {
+        socket = io({ transports: ['polling', 'websocket'], timeout: 5000, forceNew: true });
+        socket.on('connect', function() {
+          socket.emit('join-user', userId);
+        });
+        socket.on('connect_error', function() {
+          console.error('[Socket] Erro conexao');
+        });
+        socket.on('qr', function(data) {
+          try { showQR(data.index, data.data); } catch(e) { console.error('[QR] Erro:', e); }
+        });
+        socket.on('status', function(status) {
+          try { updateStatus(status); } catch(e) { console.error('[Status] Erro:', e); }
+        });
+        loadConnectionPage();
+      } catch (err) {
+        console.error('[Init] Erro:', err.message);
+        var loading = document.getElementById('pageLoading');
+        if (loading) loading.innerHTML = '<div class="text-center py-10"><p class="text-red-400 text-sm">Erro ao carregar. <button onclick="location.reload()" class="text-yellow-400 underline">Tentar novamente</button></p></div>';
+      }
+    }
+
+    async function checkStatus() {
+      try {
+        var res = await fetch('/api/whatsapp/status');
+        return await res.json();
+      } catch(e) {
+        return [{ index: 0, connected: false, connecting: false, number: null }];
+      }
+    }
+
+    function accountCardHTML() {
+      return '<div class="card-g p-6 text-center">' +
+        '<div class="flex items-center justify-center gap-2 mb-4">' +
+        '<i class="fab fa-whatsapp text-xl text-gold"></i>' +
+        '<h2 class="text-sm font-bold text-gray-200">Conta WhatsApp</h2>' +
+        '</div>' +
+        '<div class="py-4" id="qrContainer0">' +
+        '<div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 inline-block" id="qrStatus0">' +
+        '<p class="text-yellow-400 text-sm">Clique em "Conectar"</p>' +
+        '</div></div>' +
+        '<div class="mb-4" id="waNumber0"></div>' +
+        '<div class="flex gap-3">' +
+        '<button onclick="connectWA(0)" id="btnConnect0" class="btn-cta bg-gold flex-1 py-2.5 text-sm">Conectar</button>' +
+        '<button onclick="disconnectWA(0)" class="btn-ghost px-4 py-2.5 text-sm">Desconectar</button>' +
+        '</div></div>';
+    }
+
+    async function loadConnectionPage() {
+      var html = '<div id="accountsGrid" class="grid gap-4">' +
+        accountCardHTML() +
+        '</div>';
+      var loading = document.getElementById('pageLoading');
+      var container = document.getElementById('pageConnection');
+      if (loading) loading.classList.add('hidden');
+      if (container) container.classList.remove('hidden');
+      container.innerHTML = html;
+      updateStatuses();
+    }
+
+    async function updateStatuses() {
+      var statuses = await checkStatus();
+      for (var i = 0; i < statuses.length; i++) {
+        updateStatus(statuses[i]);
+      }
+    }
+
+    function showQR(index, qrData) {
+      var container = document.getElementById('qrContainer' + index);
+      var status = document.getElementById('qrStatus' + index);
+      if (!container || !status) return;
+      container.innerHTML = '';
+      if (qrData === 'loading') {
+        status.innerHTML = '<p class="text-yellow-400 animate-pulse text-sm">Aguarde... Gerando QR Code</p>';
+      } else if (qrData) {
+        var img = document.createElement('img');
+        img.src = qrData;
+        img.className = 'max-w-[200px] mx-auto rounded-lg border-2 border-yellow-500';
+        img.alt = 'QR Code WhatsApp';
+        container.appendChild(img);
+        status.innerHTML = '<p class="text-green-400 mt-2 text-sm">Escaneie com seu WhatsApp</p>';
+      } else {
+        status.innerHTML = '<p class="text-green-400 text-sm">WhatsApp conectado!</p>';
+      }
+      var btn = document.getElementById('btnConnect' + index);
+      if (btn && qrData && qrData !== 'loading') {
+        btn.disabled = false;
+        btn.textContent = 'Conectar';
+      }
+    }
+
+    function updateStatus(status) {
+      var index = status.index;
+      var el = document.getElementById('qrStatus' + index);
+      var numEl = document.getElementById('waNumber' + index);
+      var btn = document.getElementById('btnConnect' + index);
+      if (el) {
+        if (status.connected) {
+          el.innerHTML = '<p class="text-green-400 text-sm">WhatsApp conectado!</p>';
+        } else if (status.connecting) {
+          el.innerHTML = '<p class="text-yellow-400 animate-pulse text-sm">Conectando...</p>';
+        } else {
+          el.innerHTML = '<p class="text-gray-400 text-sm">' + (status.message || 'Desconectado') + '</p>';
+        }
+      }
+      if (numEl) {
+        if (status.number) {
+          numEl.innerHTML = '<span class="text-gray-500 text-xs">' + status.number + '</span>';
+        } else {
+          numEl.innerHTML = '';
+        }
+      }
+      if (btn) {
+        btn.textContent = status.connected ? 'Conectado' : 'Conectar';
+        btn.disabled = false;
+      }
+    }
+
+    async function connectWA(index) {
+      var btn = document.getElementById('btnConnect' + index);
+      var status = document.getElementById('qrStatus' + index);
+      if (!btn || !status) return;
+      btn.disabled = true;
+      btn.textContent = 'Conectando...';
+      status.innerHTML = '<p class="text-yellow-400 animate-pulse text-sm">Iniciando conexao...</p>';
+      try {
+        var res = await fetch('/api/whatsapp/connect/' + index, { method: 'POST' });
+        var data = await res.json();
+        if (data.error) {
+          status.innerHTML = '<p class="text-red-400 text-sm">Erro: ' + data.error + '</p>';
+          btn.disabled = false;
+          btn.textContent = 'Conectar';
+          return;
+        }
+        if (data.alreadyConnected) {
+          status.innerHTML = '<p class="text-green-400 text-sm">Ja conectado!</p>';
+          btn.disabled = false;
+          btn.textContent = 'Conectar';
+          return;
+        }
+        if (data.connecting || data.success) {
+          status.innerHTML = '<p class="text-yellow-400 animate-pulse text-sm">Aguardando QR Code...</p>';
+          setTimeout(function() {
+            if (!btn.disabled) return;
+            status.innerHTML = '<p class="text-red-400 text-sm">Tempo excedido. Tente novamente.</p>';
+            btn.disabled = false;
+            btn.textContent = 'Conectar';
+          }, 30000);
+        }
+      } catch(e) {
+        status.innerHTML = '<p class="text-red-400 text-sm">Erro de conexao com o servidor</p>';
+        btn.disabled = false;
+        btn.textContent = 'Conectar';
+      }
+    }
+
+    async function disconnectWA(index) {
+      if (!confirm('Desconectar a conta WhatsApp?')) return;
+      try {
+        await fetch('/api/whatsapp/disconnect/' + index, { method: 'POST' });
+        var el = document.getElementById('qrStatus' + index);
+        if (el) el.innerHTML = '<p class="text-gray-400 text-sm">WhatsApp desconectado</p>';
+        var container = document.getElementById('qrContainer' + index);
+        if (container) container.innerHTML = '';
+        var numEl = document.getElementById('waNumber' + index);
+        if (numEl) numEl.innerHTML = '';
+      } catch(e) {}
+    }
+
+    init();
+  </script>
+</body>
+</html>

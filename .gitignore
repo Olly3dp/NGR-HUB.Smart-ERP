@@ -1,0 +1,30 @@
+# Segredos - nunca subir
+.env
+.env.local
+.env.production
+
+# Dependencias
+node_modules/
+dist/
+build/
+
+# Banco de dados local
+*.sqlite
+database/**/*.sqlite
+database/ngr_gestao.db
+
+# Modelos LLM (grandes)
+models/**/*.gguf
+
+# Instaladores compilados (regeneraveis via npm run installer:build)
+NGR-Instalador.exe
+NGR-Instalador-linux
+NGR-payload.tar
+NGR-Agent-*.zip
+.build-tools/
+
+# Logs & sistema
+*.log
+.DS_Store
+Thumbs.db
+nul

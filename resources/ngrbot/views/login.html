@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - NGR Bot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ngr: { black: '#000000', gold: '#D4AF37', crimson: '#5A0F1C', dark: '#0a0a0a' }
+          },
+          fontFamily: { sans: ['Inter', 'Roboto', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; }
+    .card-gradient { background: linear-gradient(145deg, #0a0a0a 0%, #151515 100%); }
+    .glow-gold { box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <a href="/" class="inline-flex items-center gap-2">
+        <span class="text-3xl">🤖</span>
+        <span class="text-2xl font-bold text-gold">NGR BOT</span>
+      </a>
+    </div>
+
+    <!-- Card -->
+    <div class="card-gradient rounded-2xl border border-yellow-500/20 p-8 glow-gold">
+      <h1 class="text-2xl font-bold text-center mb-2">Bem-vindo de volta</h1>
+      <p class="text-gray-400 text-center mb-6">Entre com suas credenciais</p>
+
+      <!-- Error -->
+      <div id="error" class="hidden bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg mb-4 text-sm"></div>
+
+      <!-- Form -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Email</label>
+          <input type="email" id="email" required placeholder="seu@email.com" 
+            class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-yellow-500 focus:outline-none transition">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Senha</label>
+          <input type="password" id="password" required placeholder="••••••••" 
+            class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-yellow-500 focus:outline-none transition">
+        </div>
+
+        <button type="submit" id="btnSubmit" class="w-full bg-crimson hover:bg-red-700 py-3 rounded-lg font-bold transition">
+          Entrar
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-4 my-6">
+        <div class="flex-1 h-px bg-gray-700"></div>
+        <span class="text-gray-500 text-sm">ou</span>
+        <div class="flex-1 h-px bg-gray-700"></div>
+      </div>
+
+      <!-- Register Link -->
+      <a href="/cadastro" class="block text-center w-full border-2 border-yellow-500 text-yellow-400 py-3 rounded-lg font-medium hover:bg-yellow-500 hover:text-black transition">
+        Criar Conta
+      </a>
+    </div>
+
+    <!-- Back Link -->
+    <div class="text-center mt-6">
+      <a href="/" class="text-gray-400 hover:text-yellow-400 transition text-sm">
+        ← Voltar para o site
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btnSubmit');
+      const error = document.getElementById('error');
+      
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btn.textContent = 'Entrando...';
+      error.classList.add('hidden');
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          window.location.href = '/dashboard';
+        } else {
+          error.textContent = data.error || 'Erro ao fazer login';
+          error.classList.remove('hidden');
+        }
+      } catch (err) {
+        error.textContent = 'Erro de conexão';
+        error.classList.remove('hidden');
+      }
+      
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      btn.textContent = 'Entrar';
+    });
+  </script>
+</body>
+</html>
