@@ -2,7 +2,7 @@
 
 Markdown
 
-# NGR HUB - Smart ERP & Mini Site Creator
+# NGR HUB - Smart ERP & Agent IA
 
 The **NGR HUB** is a comprehensive Management (CRM/ERP) solution and dynamic Minisite Builder, designed to simplify the administration of businesses, clients, sales, and digital presence on a single fast and intuitive platform.
 
