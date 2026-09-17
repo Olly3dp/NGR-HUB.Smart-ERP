@@ -1,71 +1,71 @@
-🚀 Pilares Principais do NGRHUB Smart ERPWhatsApp Integrado via API: Configure sua própria chave de API e deixe que um assistente virtual inteligente faça o atendimento automatizado aos seus clientes, respondendo dúvidas, qualificando leads e agilizando o suporte 24 horas por dia.Assistente de Gestão por IA: Diga adeus aos cliques excessivos. Através de comandos de texto ou voz para a IA interna, você pode criar tarefas, cadastrar contas a pagar, marcar contas como pagas e extrair relatórios instantaneamente.  Interface Amigável e Funcional: Um ERP desenhado para ser intuitivo, garantindo que qualquer membro da equipe consiga operá-lo sem curvas de aprendizado complexas.
+🚀 Main Pillars of NGRHUB Smart ERPWhatsApp Integrated via API: Set up your own API key and let an intelligent virtual assistant handle automated customer service, answering questions, qualifying leads, and streamlining support 24 hours a day. AI Management Assistant: Say goodbye to excessive clicks. Through text or voice commands to the internal AI, you can create tasks, register accounts payable, mark accounts as paid, and extract reports instantly. User-Friendly and Functional Interface: An ERP designed to be intuitive, ensuring that any team member can operate it without complex learning curves.
 
 Markdown
 
-# NGR HUB - Smart ERP & Criador de Minisites
+# NGR HUB - Smart ERP & Mini Site Creator
 
-O **NGR HUB** é uma solução completa de Gestão (CRM/ERP) e Construtor de Minisites dinâmicos, desenvolvida para simplificar a administração de negócios, clientes, vendas e presença digital em uma única plataforma rápida e intuitiva.
+The **NGR HUB** is a comprehensive Management (CRM/ERP) solution and dynamic Minisite Builder, designed to simplify the administration of businesses, clients, sales, and digital presence on a single fast and intuitive platform.
 
----
+Please provide the text you would like me to translate.
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
 * **Backend:** Python 3 (FastAPI / Flask / SQLite)
-* **Frontend:** HTML5, CSS3, JavaScript Vanilla
-* **Ambiente & Ferramentas:** Shell Script (Bash), Node.js / Bun
+* **Frontend:** HTML5, CSS3, Vanilla JavaScript
+* **Environment & Tools:** Shell Script (Bash), Node.js / Bun
 
----
+Please provide the text you would like me to translate.
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-Antes de iniciar, certifique-se de ter instalado em sua máquina (Linux/Ubuntu/Debian):
+Before starting, make sure you have installed on your machine (Linux/Ubuntu/Debian):
 
-* **Python 3.8+** e `pip`
+* **Python 3.8+** and `pip`
 * **Git**
-* Pacote `psmisc` (para gerenciamento de portas via `fuser`):
-  ```bash
-  sudo apt update && sudo apt install psmisc -y
+* Package `psmisc` (for port management via `fuser`):
+```bash ```
+sudo apt update && sudo apt install psmisc -y
 
-⚙️ Passo a Passo de Instalação e Execução
-1. Clonar o Repositório
+⚙️ Step-by-Step Installation and Execution
+1. Clone the Repository
 
-Abra o terminal e baixe o projeto para a sua máquina:
+Open the terminal and download the project to your machine:
 Bash
 
 git clone [https://github.com/Olly3dp/NGR-HUB.Smart-ERP.git](https://github.com/Olly3dp/NGR-HUB.Smart-ERP.git)
 cd NGR-HUB.Smart-ERP
 
-2. Configurar o Ambiente Virtual (Opcional, mas Recomendado)
+2. Set Up the Virtual Environment (Optional, but Recommended)
 
-Crie e ative um ambiente virtual Python para isolar as dependências:
+Create and activate a Python virtual environment to isolate dependencies:
 Bash
 
 python3 -m venv .venv
-source .venv/bin/activate
+fuente .venv/bin/activate
 
-3. Instalar as Dependências
+3. Install the Dependencies
 
-Instale todos os pacotes necessários especificados no projeto:
+Install all the necessary packages specified in the project:
 Bash
 
 pip install -r requirements.txt
 
-(Caso o arquivo requirements.txt não exista, instale os pacotes base como pip install fastapi uvicorn sqlite3 ou equivalentes).
-⚡ Inicialização Rápida (Script Automático)
+(If the requirements.txt file does not exist, install the base packages such as pip install fastapi uvicorn sqlite3 or equivalents).
+⚡ Quick Start (Automatic Script)
 
-O repositório conta com um script de inicialização inteligente que libera portas ocupadas e sobe a aplicação automaticamente.
+The repository includes an intelligent initialization script that frees up occupied ports and automatically starts the application.
 
-    Torne o script executável:
-    Bash
+Make the script executable:
+Bash
 
-    chmod +x start.sh
+chmod +x start.sh
 
-    Execute o servidor:
+Run the server:
 
-        Via Terminal:
-        Bash
+Por Terminal:
+Bash
 
-        ./start.sh
+./start.sh
 
-        Via Interface Gráfica:
-        Dê dois cliques no arquivo start.sh dentro da pasta do projeto e selecione a opção "Executar no Terminal".
+Via Graphical Interface:
+Double-click the start.sh file inside the project folder and select the "Run in Terminal" option.
