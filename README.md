@@ -20,7 +20,7 @@ Please provide the text you would like me to translate.
 
 Before starting, make sure you have installed on your machine (Linux/Ubuntu/Debian):
 
-* **Python 3.8+** and `pip`
+* **Python 3.3+** and `pip`
 * **Git**
 * Package `psmisc` (for port management via `fuser`):
 ```bash ```
